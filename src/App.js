@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useContext } from 'react'
+
+import BootstrapContainer from './components/structure/BootstrapContainer'
+import AuthModeButton from './components/auth/AuthModeButton'
+import Auth from './components/auth/Auth'
+import AlertBanner from './components/utility/AlertBanner'
+
+import UserProfile from './components/home/UserProfile'
+
+import FetchContext from './store/FetchContext'
 
 function App() {
+
+  const ctx = useContext(FetchContext)
+  const [isAuth, setIsAuth] = useState(true)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment>
+      <BootstrapContainer contStyle='container my-5' rowStyle='row' colStyle='col' >
+        {renderUserProfile()}
+        {renderAuth()}
+      </BootstrapContainer>
+      <BootstrapContainer contStyle='container my-5' rowStyle='row' colStyle='col' >
+        {renderAlert()}
+      </BootstrapContainer>
+
+    </React.Fragment>
   );
+
+  function renderUserProfile () {
+    return (
+      isAuth ? <UserProfile isAuth={isAuth} setIsAuth={setIsAuth} /> : null
+    )
+  }
+
+  function renderAuth () {
+    return (
+      !isAuth ? <Auth setIsAuth={setIsAuth}/> : null
+    )
+  }
+
+  function renderAlert () {
+    return (
+        ctx.alert.message ? <AlertBanner alert={ctx.alert} setAlert={ctx.setAlert}/> : null
+      )
+  }
+
 }
 
 export default App;
